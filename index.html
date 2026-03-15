@@ -851,7 +851,7 @@ input[type="range"]::-moz-range-thumb {
 .catalyst-year-header:first-child { margin-top: 0; }
 .catalyst-row {
   display: grid;
-  grid-template-columns: 110px 1fr 90px 100px 44px;
+  grid-template-columns: 110px 1fr 90px 100px 90px 36px;
   gap: 12px;
   align-items: center;
   padding: 14px 16px;
@@ -932,6 +932,28 @@ input[type="range"]::-moz-range-thumb {
   text-align: center;
   font-size: 16px;
 }
+.catalyst-status {
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+.status-done { color: var(--green, #4caf50); }
+.status-progress { color: var(--orange); }
+.status-pending { color: var(--text-muted); }
+.catalyst-source {
+  text-align: center;
+}
+.catalyst-source a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.18s;
+  display: inline-flex;
+  align-items: center;
+}
+.catalyst-source a:hover {
+  color: var(--gold);
+}
 .catalyst-legend {
   display: flex;
   flex-wrap: wrap;
@@ -952,7 +974,7 @@ input[type="range"]::-moz-range-thumb {
 }
 .catalyst-col-headers {
   display: grid;
-  grid-template-columns: 110px 1fr 90px 100px 44px;
+  grid-template-columns: 110px 1fr 90px 100px 90px 36px;
   gap: 12px;
   padding: 0 16px 8px;
   font-size: 10px;
@@ -970,7 +992,8 @@ input[type="range"]::-moz-range-thumb {
   .catalyst-timing { font-size: 11px; }
   .catalyst-row .catalyst-importance,
   .catalyst-row .impact-bars,
-  .catalyst-row .catalyst-check {
+  .catalyst-row .catalyst-status,
+  .catalyst-row .catalyst-source {
     display: inline-flex;
     margin-right: 8px;
   }
@@ -1399,7 +1422,7 @@ input[type="range"]::-moz-range-thumb {
 <section id="catalysts">
   <div class="container">
     <h2 class="section-title"><span class="dot"></span>Catalysts Timeline — 2026 & 2027</h2>
-    <p class="section-subtitle">Key milestones with importance rating and potential impact on share price. Completed items are greyed out.</p>
+    <p class="section-subtitle">Key milestones with importance rating and potential impact on share price. Verified status and source links included. Completed items are greyed out.</p>
 
     <div class="catalyst-legend">
       <div class="legend-item"><span class="legend-swatch" style="background:var(--gold)"></span>Zancudo</div>
@@ -1415,7 +1438,8 @@ input[type="range"]::-moz-range-thumb {
       <div>Catalyst</div>
       <div>Importance</div>
       <div>Impact</div>
-      <div>Done</div>
+      <div>Status</div>
+      <div>Source</div>
     </div>
 
     <div class="catalyst-timeline">
@@ -1425,43 +1449,57 @@ input[type="range"]::-moz-range-thumb {
       <!-- Q1 2026 -->
       <div class="catalyst-row done" data-project="zancudo">
         <div class="catalyst-timing">Q1 2026</div>
-        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>PEA + Production Guidance veröffentlicht</div>
+        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Updated MRE veröffentlicht (23% upgraded to Indicated)</div>
         <div class="catalyst-importance importance-critical">Critical</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
-        <div class="catalyst-check">✓</div>
+        <div class="catalyst-status status-done">✓ Bestätigt</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-updated-mineral-resource-11628/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
-      <div class="catalyst-row done" data-project="zancudo">
+      <div class="catalyst-row" data-project="zancudo">
         <div class="catalyst-timing">Q1 2026</div>
-        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Start 15.000 m Bohrprogramm</div>
+        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>15.000 m Bohrprogramm angekündigt (Start geplant Ende 2025)</div>
         <div class="catalyst-importance importance-high">High</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">✓</div>
-      </div>
-
-      <div class="catalyst-row done" data-project="lomero">
-        <div class="catalyst-timing">Q1 2026</div>
-        <div class="catalyst-desc"><span class="project-tag tag-lomero">Lomero</span>Mining Concession erhalten</div>
-        <div class="catalyst-importance importance-high">High</div>
-        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">✓</div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-updated-mineral-resource-11628/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <div class="catalyst-row done" data-project="corporate">
         <div class="catalyst-timing">Q1 2026</div>
-        <div class="catalyst-desc"><span class="project-tag tag-corporate">Corporate</span>CA$16.7M Warrant Exercises — Bilanzstärkung</div>
+        <div class="catalyst-desc"><span class="project-tag tag-corporate">Corporate</span>CA$16.7M aus Warrant-Exercises — Bilanzstärkung</div>
         <div class="catalyst-importance importance-medium">Medium</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">✓</div>
+        <div class="catalyst-status status-done">✓ Bestätigt</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-update-on-its-capital-st-13435/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      </div>
+
+      <div class="catalyst-row done" data-project="corporate">
+        <div class="catalyst-timing">Q1 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-corporate">Corporate</span>Strategische Kooperation mit ProGrowth (Saudi-Arabien)</div>
+        <div class="catalyst-importance importance-high">High</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-status status-done">✓ Bestätigt</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-strategic-collaboration-13404/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      </div>
+
+      <div class="catalyst-row" data-project="aguablanca">
+        <div class="catalyst-timing">Q1 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-aguablanca">Aguablanca</span>Launch US$20M RNR Notes Offering (12% Secured Notes)</div>
+        <div class="catalyst-importance importance-critical">Critical</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-status status-progress">⏳ Läuft</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-the-launch-of-a-us-20-00-13363/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <!-- Q2 2026 -->
       <div class="catalyst-row" data-project="zancudo">
         <div class="catalyst-timing">Q2 2026</div>
-        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Neue Mühle installiert — Kapazitätserhöhung Crushing</div>
+        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Neue Mühle am Independencia Mine — Kapazitätserhöhung Crushing</div>
         <div class="catalyst-importance importance-high">High</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="catalyst-status status-progress">⏳ Läuft</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-update-on-its-capital-st-13435/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <div class="catalyst-row" data-project="aguablanca">
@@ -1469,15 +1507,8 @@ input[type="range"]::-moz-range-thumb {
         <div class="catalyst-desc"><span class="project-tag tag-aguablanca">Aguablanca</span>Restart-Aktivitäten beginnen — Dewatering & Rehabilitation</div>
         <div class="catalyst-importance importance-critical">Critical</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">—</div>
-      </div>
-
-      <div class="catalyst-row" data-project="aguablanca">
-        <div class="catalyst-timing">Q2 2026</div>
-        <div class="catalyst-desc"><span class="project-tag tag-aguablanca">Aguablanca</span>RNR Notes Offering abgeschlossen (US$20M @ 12%)</div>
-        <div class="catalyst-importance importance-high">High</div>
-        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-update-on-its-capital-st-13435/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <!-- H1 2026 -->
@@ -1486,15 +1517,8 @@ input[type="range"]::-moz-range-thumb {
         <div class="catalyst-desc"><span class="project-tag tag-lomero">Lomero</span>PEA Veröffentlichung — Erster Blick auf NPV/IRR & Capex</div>
         <div class="catalyst-importance importance-critical">Critical</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
-        <div class="catalyst-check">—</div>
-      </div>
-
-      <div class="catalyst-row" data-project="zancudo">
-        <div class="catalyst-timing">H1 2026</div>
-        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>4 km Bypass-Straße zur Hauptstraße nach Medellín fertig</div>
-        <div class="catalyst-importance importance-medium">Medium</div>
-        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-sale-of-29-interest-in-9858/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <!-- Q3 2026 -->
@@ -1503,7 +1527,8 @@ input[type="range"]::-moz-range-thumb {
         <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>1.000 tpd Flotationsanlage in Betrieb — Konzentratproduktion startet</div>
         <div class="catalyst-importance importance-critical">Critical</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-2025-production-results-13337/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <div class="catalyst-row" data-project="zancudo">
@@ -1511,7 +1536,8 @@ input[type="range"]::-moz-range-thumb {
         <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Erste kommerzielle Au-Ag Konzentrat-Lieferungen an Trafigura</div>
         <div class="catalyst-importance importance-critical">Critical</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-2025-production-results-13337/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <div class="catalyst-row" data-project="zancudo">
@@ -1519,33 +1545,28 @@ input[type="range"]::-moz-range-thumb {
         <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Bohrergebnisse 15.000 m Programm — Resource Expansion</div>
         <div class="catalyst-importance importance-high">High</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-updated-mineral-resource-11628/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <!-- Q4 2026 -->
       <div class="catalyst-row" data-project="aguablanca">
         <div class="catalyst-timing">Q4 2026</div>
-        <div class="catalyst-desc"><span class="project-tag tag-aguablanca">Aguablanca</span>Untertagebau wieder in Produktion — Ni-Cu Konzentrate an Boliden</div>
+        <div class="catalyst-desc"><span class="project-tag tag-aguablanca">Aguablanca</span>Untertagebau wieder in Produktion — Ni-Cu Konzentrate</div>
         <div class="catalyst-importance importance-critical">Critical</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
-        <div class="catalyst-check">—</div>
-      </div>
-
-      <div class="catalyst-row" data-project="aguablanca">
-        <div class="catalyst-timing">Q4 2026</div>
-        <div class="catalyst-desc"><span class="project-tag tag-aguablanca">Aguablanca</span>5.000 tpd Aufbereitungsanlage — METSO-Inbetriebnahme abgeschlossen</div>
-        <div class="catalyst-importance importance-high">High</div>
-        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-the-launch-of-a-us-20-00-13363/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <!-- H2 2026 -->
       <div class="catalyst-row" data-project="corporate">
         <div class="catalyst-timing">H2 2026</div>
-        <div class="catalyst-desc"><span class="project-tag tag-corporate">Corporate</span>Wechsel von Cboe Canada zur TSX — Mehr Liquidität & institutionelle Investoren</div>
+        <div class="catalyst-desc"><span class="project-tag tag-corporate">Corporate</span>Wechsel zur TSX — Mehr Liquidität</div>
         <div class="catalyst-importance importance-high">High</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://www.youtube.com/watch?v=mb4zs238r6M" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <div class="catalyst-row" data-project="zancudo">
@@ -1553,7 +1574,17 @@ input[type="range"]::-moz-range-thumb {
         <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Aktualisiertes MRE nach 15.000 m Bohrungen</div>
         <div class="catalyst-importance importance-high">High</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-updated-mineral-resource-11628/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+      </div>
+
+      <div class="catalyst-row" data-project="zancudo">
+        <div class="catalyst-timing">H2 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Updated PEA mit neuen Metallpreisen & erweiterter Ressource</div>
+        <div class="catalyst-importance importance-critical">Critical</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-updated-mineral-resource-11628/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <!-- 2027 -->
@@ -1564,7 +1595,8 @@ input[type="range"]::-moz-range-thumb {
         <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Erstes volles Quartal kommerzielle Konzentratproduktion — Revenue-Beweis</div>
         <div class="catalyst-importance importance-critical">Critical</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-2025-production-results-13337/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <div class="catalyst-row" data-project="aguablanca">
@@ -1572,7 +1604,8 @@ input[type="range"]::-moz-range-thumb {
         <div class="catalyst-desc"><span class="project-tag tag-aguablanca">Aguablanca</span>Steady-State Produktion erreicht (~2.400 tpd) — Cashflow an DMET (22.1%)</div>
         <div class="catalyst-importance importance-critical">Critical</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-the-launch-of-a-us-20-00-13363/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <div class="catalyst-row" data-project="lomero">
@@ -1580,7 +1613,8 @@ input[type="range"]::-moz-range-thumb {
         <div class="catalyst-desc"><span class="project-tag tag-lomero">Lomero</span>Pre-Feasibility Study (PFS) — Detaillierte Wirtschaftlichkeit & Capex</div>
         <div class="catalyst-importance importance-critical">Critical</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-sale-of-29-interest-in-9858/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <div class="catalyst-row" data-project="lomero">
@@ -1588,15 +1622,17 @@ input[type="range"]::-moz-range-thumb {
         <div class="catalyst-desc"><span class="project-tag tag-lomero">Lomero</span>Nutzung Aguablanca 5.000 tpd Anlage für Lomero-Material (Synergy)</div>
         <div class="catalyst-importance importance-high">High</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-the-launch-of-a-us-20-00-13363/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <div class="catalyst-row" data-project="toral">
         <div class="catalyst-timing">2027</div>
         <div class="catalyst-desc"><span class="project-tag tag-toral">Toral</span>PEA oder Scoping Study — Erste Wirtschaftlichkeitsanalyse Zn-Pb-Ag</div>
         <div class="catalyst-importance importance-high">High</div>
-        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://www.youtube.com/watch?v=mb4zs238r6M" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <div class="catalyst-row" data-project="zancudo">
@@ -1604,15 +1640,17 @@ input[type="range"]::-moz-range-thumb {
         <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Feasibility Study auf Basis erweiterter Ressource</div>
         <div class="catalyst-importance importance-high">High</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-updated-mineral-resource-11628/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <div class="catalyst-row" data-project="corporate">
         <div class="catalyst-timing">2027</div>
-        <div class="catalyst-desc"><span class="project-tag tag-corporate">Corporate</span>Konvertierung Debentures → Aktien (CA$34.2M) oder Refinanzierung</div>
+        <div class="catalyst-desc"><span class="project-tag tag-corporate">Corporate</span>Konvertierung Debentures → Aktien oder Refinanzierung</div>
         <div class="catalyst-importance importance-medium">Medium</div>
-        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-details-for-the-february-13417/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
       <div class="catalyst-row" data-project="corporate">
@@ -1620,7 +1658,8 @@ input[type="range"]::-moz-range-thumb {
         <div class="catalyst-desc"><span class="project-tag tag-corporate">Corporate</span>Mögliche M&A / Strategische JV wenn Studien & Marktumfeld positiv</div>
         <div class="catalyst-importance importance-medium">Medium</div>
         <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
-        <div class="catalyst-check">—</div>
+        <div class="catalyst-status status-pending">— Offen</div>
+        <div class="catalyst-source"><a href="https://denariusmetals.com/denarius-metals-announces-strategic-collaboration-13404/" target="_blank" title="Source"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
       </div>
 
     </div>
