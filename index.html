@@ -833,6 +833,148 @@ input[type="range"]::-moz-range-thumb {
   min-width: 200px;
   flex: 1;
 }
+
+/* ===== CATALYSTS TIMELINE ===== */
+.catalyst-timeline {
+  position: relative;
+  padding: 0;
+}
+.catalyst-year-header {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold);
+  margin: 32px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.catalyst-year-header:first-child { margin-top: 0; }
+.catalyst-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 90px 100px 44px;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  transition: background 0.18s;
+  border-left: 3px solid transparent;
+}
+.catalyst-row:hover { background: var(--card-hover); }
+.catalyst-row.done { opacity: 0.45; }
+.catalyst-row.done .catalyst-desc { text-decoration: line-through; }
+.catalyst-row[data-project="zancudo"] { border-left-color: var(--gold); }
+.catalyst-row[data-project="aguablanca"] { border-left-color: var(--teal); }
+.catalyst-row[data-project="lomero"] { border-left-color: var(--orange); }
+.catalyst-row[data-project="toral"] { border-left-color: #B07FDB; }
+.catalyst-row[data-project="corporate"] { border-left-color: #888; }
+.catalyst-timing {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.catalyst-desc {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text);
+}
+.catalyst-desc .project-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.tag-zancudo { background: var(--gold-dim); color: var(--gold); }
+.tag-aguablanca { background: var(--teal-dim); color: var(--teal); }
+.tag-lomero { background: var(--orange-dim); color: var(--orange); }
+.tag-toral { background: rgba(176,127,219,0.15); color: #B07FDB; }
+.tag-corporate { background: rgba(136,136,136,0.15); color: #aaa; }
+.catalyst-importance {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-align: center;
+  white-space: nowrap;
+}
+.importance-critical { background: var(--red-dim); color: var(--red); }
+.importance-high { background: var(--orange-dim); color: var(--orange); }
+.importance-medium { background: rgba(212,168,67,0.15); color: var(--gold); }
+.importance-low { background: rgba(136,136,136,0.15); color: #999; }
+.catalyst-impact {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+.impact-bars {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+}
+.impact-bar {
+  width: 6px;
+  height: 16px;
+  border-radius: 2px;
+  background: var(--border);
+}
+.impact-bar.filled { background: var(--gold); }
+.impact-bar.filled.teal { background: var(--teal); }
+.catalyst-check {
+  text-align: center;
+  font-size: 16px;
+}
+.catalyst-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.legend-swatch {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+}
+.catalyst-col-headers {
+  display: grid;
+  grid-template-columns: 110px 1fr 90px 100px 44px;
+  gap: 12px;
+  padding: 0 16px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+@media (max-width: 768px) {
+  .catalyst-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .catalyst-col-headers { display: none; }
+  .catalyst-timing { font-size: 11px; }
+  .catalyst-row .catalyst-importance,
+  .catalyst-row .impact-bars,
+  .catalyst-row .catalyst-check {
+    display: inline-flex;
+    margin-right: 8px;
+  }
+}
 </style>
 </head>
 <body>
@@ -855,6 +997,7 @@ input[type="range"]::-moz-range-thumb {
       <a href="#nav-model">NAV</a>
       <a href="#dcf-model">DCF</a>
       <a href="#sensitivity">Sensitivity</a>
+      <a href="#catalysts">Catalysts</a>
       <a href="#risks">Risks</a>
       <a href="#comps">Comps</a>
       <a href="#thesis">Thesis</a>
@@ -1252,7 +1395,239 @@ input[type="range"]::-moz-range-thumb {
   </div>
 </section>
 
-<!-- ===== 8. RISK ASSESSMENT ===== -->
+<!-- ===== 8. CATALYSTS TIMELINE ===== -->
+<section id="catalysts">
+  <div class="container">
+    <h2 class="section-title"><span class="dot"></span>Catalysts Timeline — 2026 & 2027</h2>
+    <p class="section-subtitle">Key milestones with importance rating and potential impact on share price. Completed items are greyed out.</p>
+
+    <div class="catalyst-legend">
+      <div class="legend-item"><span class="legend-swatch" style="background:var(--gold)"></span>Zancudo</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:var(--teal)"></span>Aguablanca</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:var(--orange)"></span>Lomero</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#B07FDB"></span>Toral</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#888"></span>Corporate</div>
+      <div class="legend-item" style="margin-left:16px">Impact: <span style="display:inline-flex;gap:2px;vertical-align:middle;margin-left:4px"><span style="width:6px;height:14px;border-radius:2px;background:var(--gold)"></span><span style="width:6px;height:14px;border-radius:2px;background:var(--gold)"></span><span style="width:6px;height:14px;border-radius:2px;background:var(--gold)"></span><span style="width:6px;height:14px;border-radius:2px;background:var(--gold)"></span><span style="width:6px;height:14px;border-radius:2px;background:var(--gold)"></span></span> = Massive</div>
+    </div>
+
+    <div class="catalyst-col-headers">
+      <div>Timing</div>
+      <div>Catalyst</div>
+      <div>Importance</div>
+      <div>Impact</div>
+      <div>Done</div>
+    </div>
+
+    <div class="catalyst-timeline">
+
+      <div class="catalyst-year-header">2026</div>
+
+      <!-- Q1 2026 -->
+      <div class="catalyst-row done" data-project="zancudo">
+        <div class="catalyst-timing">Q1 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>PEA + Production Guidance veröffentlicht</div>
+        <div class="catalyst-importance importance-critical">Critical</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
+        <div class="catalyst-check">✓</div>
+      </div>
+
+      <div class="catalyst-row done" data-project="zancudo">
+        <div class="catalyst-timing">Q1 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Start 15.000 m Bohrprogramm</div>
+        <div class="catalyst-importance importance-high">High</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">✓</div>
+      </div>
+
+      <div class="catalyst-row done" data-project="lomero">
+        <div class="catalyst-timing">Q1 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-lomero">Lomero</span>Mining Concession erhalten</div>
+        <div class="catalyst-importance importance-high">High</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">✓</div>
+      </div>
+
+      <div class="catalyst-row done" data-project="corporate">
+        <div class="catalyst-timing">Q1 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-corporate">Corporate</span>CA$16.7M Warrant Exercises — Bilanzstärkung</div>
+        <div class="catalyst-importance importance-medium">Medium</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">✓</div>
+      </div>
+
+      <!-- Q2 2026 -->
+      <div class="catalyst-row" data-project="zancudo">
+        <div class="catalyst-timing">Q2 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Neue Mühle installiert — Kapazitätserhöhung Crushing</div>
+        <div class="catalyst-importance importance-high">High</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <div class="catalyst-row" data-project="aguablanca">
+        <div class="catalyst-timing">Q2 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-aguablanca">Aguablanca</span>Restart-Aktivitäten beginnen — Dewatering & Rehabilitation</div>
+        <div class="catalyst-importance importance-critical">Critical</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <div class="catalyst-row" data-project="aguablanca">
+        <div class="catalyst-timing">Q2 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-aguablanca">Aguablanca</span>RNR Notes Offering abgeschlossen (US$20M @ 12%)</div>
+        <div class="catalyst-importance importance-high">High</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <!-- H1 2026 -->
+      <div class="catalyst-row" data-project="lomero">
+        <div class="catalyst-timing">H1 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-lomero">Lomero</span>PEA Veröffentlichung — Erster Blick auf NPV/IRR & Capex</div>
+        <div class="catalyst-importance importance-critical">Critical</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <div class="catalyst-row" data-project="zancudo">
+        <div class="catalyst-timing">H1 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>4 km Bypass-Straße zur Hauptstraße nach Medellín fertig</div>
+        <div class="catalyst-importance importance-medium">Medium</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <!-- Q3 2026 -->
+      <div class="catalyst-row" data-project="zancudo">
+        <div class="catalyst-timing">Q3 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>1.000 tpd Flotationsanlage in Betrieb — Konzentratproduktion startet</div>
+        <div class="catalyst-importance importance-critical">Critical</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <div class="catalyst-row" data-project="zancudo">
+        <div class="catalyst-timing">Q3 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Erste kommerzielle Au-Ag Konzentrat-Lieferungen an Trafigura</div>
+        <div class="catalyst-importance importance-critical">Critical</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <div class="catalyst-row" data-project="zancudo">
+        <div class="catalyst-timing">Q3–Q4 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Bohrergebnisse 15.000 m Programm — Resource Expansion</div>
+        <div class="catalyst-importance importance-high">High</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <!-- Q4 2026 -->
+      <div class="catalyst-row" data-project="aguablanca">
+        <div class="catalyst-timing">Q4 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-aguablanca">Aguablanca</span>Untertagebau wieder in Produktion — Ni-Cu Konzentrate an Boliden</div>
+        <div class="catalyst-importance importance-critical">Critical</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <div class="catalyst-row" data-project="aguablanca">
+        <div class="catalyst-timing">Q4 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-aguablanca">Aguablanca</span>5.000 tpd Aufbereitungsanlage — METSO-Inbetriebnahme abgeschlossen</div>
+        <div class="catalyst-importance importance-high">High</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <!-- H2 2026 -->
+      <div class="catalyst-row" data-project="corporate">
+        <div class="catalyst-timing">H2 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-corporate">Corporate</span>Wechsel von Cboe Canada zur TSX — Mehr Liquidität & institutionelle Investoren</div>
+        <div class="catalyst-importance importance-high">High</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <div class="catalyst-row" data-project="zancudo">
+        <div class="catalyst-timing">H2 2026</div>
+        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Aktualisiertes MRE nach 15.000 m Bohrungen</div>
+        <div class="catalyst-importance importance-high">High</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <!-- 2027 -->
+      <div class="catalyst-year-header">2027</div>
+
+      <div class="catalyst-row" data-project="zancudo">
+        <div class="catalyst-timing">Q1 2027</div>
+        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Erstes volles Quartal kommerzielle Konzentratproduktion — Revenue-Beweis</div>
+        <div class="catalyst-importance importance-critical">Critical</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <div class="catalyst-row" data-project="aguablanca">
+        <div class="catalyst-timing">H1 2027</div>
+        <div class="catalyst-desc"><span class="project-tag tag-aguablanca">Aguablanca</span>Steady-State Produktion erreicht (~2.400 tpd) — Cashflow an DMET (22.1%)</div>
+        <div class="catalyst-importance importance-critical">Critical</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <div class="catalyst-row" data-project="lomero">
+        <div class="catalyst-timing">H1 2027</div>
+        <div class="catalyst-desc"><span class="project-tag tag-lomero">Lomero</span>Pre-Feasibility Study (PFS) — Detaillierte Wirtschaftlichkeit & Capex</div>
+        <div class="catalyst-importance importance-critical">Critical</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <div class="catalyst-row" data-project="lomero">
+        <div class="catalyst-timing">2027</div>
+        <div class="catalyst-desc"><span class="project-tag tag-lomero">Lomero</span>Nutzung Aguablanca 5.000 tpd Anlage für Lomero-Material (Synergy)</div>
+        <div class="catalyst-importance importance-high">High</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <div class="catalyst-row" data-project="toral">
+        <div class="catalyst-timing">2027</div>
+        <div class="catalyst-desc"><span class="project-tag tag-toral">Toral</span>PEA oder Scoping Study — Erste Wirtschaftlichkeitsanalyse Zn-Pb-Ag</div>
+        <div class="catalyst-importance importance-high">High</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <div class="catalyst-row" data-project="zancudo">
+        <div class="catalyst-timing">2027</div>
+        <div class="catalyst-desc"><span class="project-tag tag-zancudo">Zancudo</span>Feasibility Study auf Basis erweiterter Ressource</div>
+        <div class="catalyst-importance importance-high">High</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <div class="catalyst-row" data-project="corporate">
+        <div class="catalyst-timing">2027</div>
+        <div class="catalyst-desc"><span class="project-tag tag-corporate">Corporate</span>Konvertierung Debentures → Aktien (CA$34.2M) oder Refinanzierung</div>
+        <div class="catalyst-importance importance-medium">Medium</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+      <div class="catalyst-row" data-project="corporate">
+        <div class="catalyst-timing">2027</div>
+        <div class="catalyst-desc"><span class="project-tag tag-corporate">Corporate</span>Mögliche M&A / Strategische JV wenn Studien & Marktumfeld positiv</div>
+        <div class="catalyst-importance importance-medium">Medium</div>
+        <div class="impact-bars"><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar filled"></span><span class="impact-bar"></span><span class="impact-bar"></span></div>
+        <div class="catalyst-check">—</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== 9. RISK ASSESSMENT ===== -->
 <section id="risks">
   <div class="container">
     <h2 class="section-title"><span class="dot"></span>Risk Assessment</h2>
