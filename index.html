@@ -1,0 +1,2039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+
+<!-- Perplexity Computer Attribution — SEO Meta Tags -->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Denarius Metals Corp — Investment Analysis Dashboard</title>
+<meta name="description" content="Interactive investment analysis dashboard for Denarius Metals Corp (DMET.NE / DNRSF). NAV model, DCF analysis, sensitivity tables.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+/* ===== CSS RESET & VARIABLES ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d26;
+  --card: #1e2130;
+  --card-hover: #252839;
+  --border: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.15);
+  --gold: #D4A843;
+  --gold-dim: rgba(212,168,67,0.15);
+  --gold-glow: rgba(212,168,67,0.3);
+  --teal: #4F98A3;
+  --teal-dim: rgba(79,152,163,0.15);
+  --teal-glow: rgba(79,152,163,0.3);
+  --red: #E55B5B;
+  --red-dim: rgba(229,91,91,0.15);
+  --green: #4CAF7D;
+  --green-dim: rgba(76,175,125,0.15);
+  --orange: #E89B50;
+  --orange-dim: rgba(232,155,80,0.15);
+  --purple: #9B7BCC;
+  --text: #E8E6E1;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+}
+
+/* Light mode */
+.light-mode {
+  --bg: #F0F0F2;
+  --surface: #FFFFFF;
+  --card: #FAFAFA;
+  --card-hover: #F0F0F2;
+  --border: rgba(0,0,0,0.08);
+  --border-strong: rgba(0,0,0,0.15);
+  --gold: #B8912A;
+  --gold-dim: rgba(184,145,42,0.12);
+  --gold-glow: rgba(184,145,42,0.2);
+  --teal: #3A7A84;
+  --teal-dim: rgba(58,122,132,0.12);
+  --teal-glow: rgba(58,122,132,0.2);
+  --red: #D44444;
+  --red-dim: rgba(212,68,68,0.1);
+  --green: #3A8F65;
+  --green-dim: rgba(58,143,101,0.1);
+  --orange: #C67D33;
+  --orange-dim: rgba(198,125,51,0.1);
+  --text: #1A1D26;
+  --text-secondary: #4B5563;
+  --text-muted: #9CA3AF;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'liga' 1;
+}
+
+/* ===== UTILITY ===== */
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums lining-nums; }
+.gold { color: var(--gold); }
+.teal { color: var(--teal); }
+.red { color: var(--red); }
+.green { color: var(--green); }
+.muted { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
+
+.container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ===== STICKY NAV ===== */
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15,17,23,0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  transition: background 0.3s;
+}
+.light-mode .top-nav {
+  background: rgba(240,240,242,0.85);
+}
+.top-nav .nav-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  gap: 12px;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--gold);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.nav-links {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.nav-links::-webkit-scrollbar { display: none; }
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  transition: color 0.2s, background 0.2s;
+}
+.nav-links a:hover { color: var(--text); background: var(--card); }
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.theme-toggle {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 12px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.theme-toggle:hover { color: var(--text); border-color: var(--border-strong); }
+
+/* ===== SECTIONS ===== */
+section {
+  padding: 56px 0;
+  border-bottom: 1px solid var(--border);
+}
+section:last-of-type { border-bottom: none; }
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-title .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+}
+.section-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  border-color: var(--border-strong);
+}
+
+/* ===== HERO ===== */
+.hero {
+  padding: 80px 0 56px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 600px;
+  background: radial-gradient(ellipse, var(--gold-dim) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-content { position: relative; z-index: 1; }
+.hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.hero-left { flex: 1; min-width: 280px; }
+.hero-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+.hero-logo svg { flex-shrink: 0; }
+.hero-logo h1 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.hero-tickers {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+.hero-tickers span { color: var(--gold); }
+.hero-right {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.hero-stat {
+  text-align: right;
+  min-width: 120px;
+}
+.hero-stat .label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.hero-stat .value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 22px;
+  font-weight: 700;
+}
+.hero-stat .sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+.price-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--red-dim);
+  color: var(--red);
+}
+
+/* ===== CHART CONTAINER ===== */
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 360px;
+}
+.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ===== TABLES ===== */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.data-table thead th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-strong);
+  white-space: nowrap;
+}
+.data-table tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+.light-mode .data-table tbody tr:hover { background: rgba(0,0,0,0.02); }
+.data-table .num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+.data-table .highlight-row {
+  background: var(--gold-dim);
+  font-weight: 600;
+}
+
+/* ===== PROJECT CARDS GRID ===== */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+}
+.project-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: border-color 0.2s;
+}
+.project-card:hover { border-color: var(--border-strong); }
+.project-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.project-card-header h3 {
+  font-size: 17px;
+  font-weight: 700;
+}
+.project-tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.tag-gold { background: var(--gold-dim); color: var(--gold); }
+.tag-teal { background: var(--teal-dim); color: var(--teal); }
+.tag-orange { background: var(--orange-dim); color: var(--orange); }
+.tag-green { background: var(--green-dim); color: var(--green); }
+.project-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.project-meta strong { color: var(--text); font-weight: 600; }
+.project-resources {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.resource-box {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+}
+.resource-box .res-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.resource-box .res-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  font-weight: 600;
+}
+.project-details {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.project-details li { margin-bottom: 3px; }
+
+/* ===== NAV MODEL ===== */
+.nav-model-grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 24px;
+}
+@media (max-width: 900px) {
+  .nav-model-grid { grid-template-columns: 1fr; }
+}
+.sliders-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-self: start;
+  position: sticky;
+  top: 68px;
+}
+.slider-group label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.slider-group label .slider-val {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--gold);
+  font-size: 13px;
+}
+.slider-group .spot-price {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--surface);
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  box-shadow: 0 0 8px var(--gold-glow);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 8px var(--gold-glow);
+}
+.slider-group.teal-slider input[type="range"]::-webkit-slider-thumb { background: var(--teal); box-shadow: 0 0 8px var(--teal-glow); }
+.slider-group.teal-slider input[type="range"]::-moz-range-thumb { background: var(--teal); box-shadow: 0 0 8px var(--teal-glow); }
+.slider-group.teal-slider .slider-val { color: var(--teal); }
+
+.nav-results-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.nav-hero-value {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  text-align: center;
+}
+.nav-hero-value .big-number {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--gold);
+}
+.nav-hero-value .big-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.nav-hero-value .upside {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+.nav-breakdown-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+.nav-breakdown-item {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  text-align: center;
+}
+.nav-breakdown-item .nav-b-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+.nav-breakdown-item .nav-b-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* ===== DCF ===== */
+.dcf-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.dcf-result-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  text-align: center;
+}
+.dcf-result-card .dcf-val {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 28px;
+  font-weight: 700;
+}
+.dcf-result-card .dcf-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  margin-top: 4px;
+}
+.dcf-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ===== SENSITIVITY MATRIX ===== */
+.sensitivity-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.sensitivity-table {
+  border-collapse: collapse;
+  font-size: 12px;
+  width: 100%;
+  min-width: 600px;
+}
+.sensitivity-table th, .sensitivity-table td {
+  padding: 10px 14px;
+  text-align: center;
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.sensitivity-table th {
+  background: var(--surface);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+.sensitivity-table .corner {
+  background: var(--card);
+  font-family: var(--font-body);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ===== RISK CARDS ===== */
+.risk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px;
+}
+.risk-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.risk-severity {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.risk-high { background: var(--red-dim); color: var(--red); }
+.risk-medium { background: var(--orange-dim); color: var(--orange); }
+.risk-low { background: var(--green-dim); color: var(--green); }
+.risk-positive { background: var(--teal-dim); color: var(--teal); }
+.risk-text { font-size: 13px; line-height: 1.5; }
+
+/* ===== COMPS TABLE ===== */
+.comps-wrap { overflow-x: auto; }
+
+/* ===== THESIS CARDS ===== */
+.thesis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.thesis-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+.thesis-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.thesis-card ul {
+  list-style: none;
+  padding: 0;
+}
+.thesis-card li {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.5;
+}
+.thesis-card li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+}
+.thesis-bull h3 { color: var(--green); }
+.thesis-base h3 { color: var(--gold); }
+.thesis-bear h3 { color: var(--red); }
+.thesis-val {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* ===== FOOTER ===== */
+.site-footer {
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.site-footer p {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  line-height: 1.7;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.site-footer a {
+  color: var(--gold);
+  text-decoration: none;
+}
+.site-footer a:hover { text-decoration: underline; }
+.disclaimer {
+  font-size: 11px !important;
+  max-width: 640px;
+  font-style: italic;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  section { padding: 36px 0; }
+  .hero { padding: 60px 0 36px; }
+  .hero-logo h1 { font-size: 20px; }
+  .hero-stat .value { font-size: 18px; }
+  .hero-right { justify-content: flex-start; }
+  .hero-stat { text-align: left; }
+  .nav-hero-value .big-number { font-size: 36px; }
+  .chart-container { height: 260px; }
+  .project-grid { grid-template-columns: 1fr; }
+  .nav-model-grid { grid-template-columns: 1fr; }
+  .sliders-panel { position: static; }
+  .nav-links { display: none; }
+  .thesis-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .container { padding: 0 16px; }
+  .hero-logo h1 { font-size: 17px; }
+  .nav-breakdown-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ===== WATERFALL CHART ===== */
+.waterfall-chart-container {
+  position: relative;
+  width: 100%;
+  height: 320px;
+}
+
+/* ===== METHOD COMPARISON ===== */
+.method-comparison {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+.method-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  text-align: center;
+}
+.method-card .method-name {
+  font-size: 11px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  font-weight: 600; margin-bottom: 6px;
+}
+.method-card .method-val {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* Warrant highlight */
+.warrant-highlight {
+  background: var(--green-dim);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  margin-top: 14px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.warrant-highlight .wh-icon {
+  font-size: 18px;
+  color: var(--green);
+}
+
+/* DCF terminal growth slider */
+.dcf-controls {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.dcf-controls .slider-group {
+  min-width: 200px;
+  flex: 1;
+}
+</style>
+</head>
+<body>
+
+<!-- ===== TOP NAV ===== -->
+<nav class="top-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-brand">
+      <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M16 2L4 9v14l12 7 12-7V9L16 2z" stroke="currentColor" stroke-width="2" fill="none"/>
+        <path d="M16 6l-8 4.7v9.3L16 25l8-4.7V10.7L16 6z" fill="currentColor" opacity="0.2"/>
+        <path d="M16 10l-4 2.3v4.7L16 19.3 20 17v-4.7L16 10z" fill="currentColor"/>
+      </svg>
+      DMET
+    </a>
+    <div class="nav-links">
+      <a href="#price-chart">Chart</a>
+      <a href="#capital">Capital</a>
+      <a href="#projects">Projects</a>
+      <a href="#nav-model">NAV</a>
+      <a href="#dcf-model">DCF</a>
+      <a href="#sensitivity">Sensitivity</a>
+      <a href="#risks">Risks</a>
+      <a href="#comps">Comps</a>
+      <a href="#thesis">Thesis</a>
+    </div>
+    <div class="nav-controls">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode">Light</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== 1. HERO ===== -->
+<section class="hero" id="hero">
+  <div class="container hero-content">
+    <div class="hero-top">
+      <div class="hero-left">
+        <div class="hero-logo">
+          <svg width="44" height="44" viewBox="0 0 48 48" fill="none" aria-label="Denarius Metals Corp logo">
+            <rect width="48" height="48" rx="12" fill="var(--gold-dim)"/>
+            <path d="M24 8L10 16v16l14 8 14-8V16L24 8z" stroke="var(--gold)" stroke-width="2" fill="none"/>
+            <path d="M24 14l-8 4.7v9.3L24 33l8-5v-9.3L24 14z" fill="var(--gold)" opacity="0.3"/>
+            <path d="M24 20l-4 2.3v4.7L24 29.3 28 27v-4.7L24 20z" fill="var(--gold)"/>
+          </svg>
+          <h1>Denarius Metals Corp</h1>
+        </div>
+        <div class="hero-tickers">
+          <span>DMET.NE</span> (Cboe Canada) &nbsp;|&nbsp; <span>DNRSF</span> (OTCQX)
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-stat">
+          <div class="label">Price (USD)</div>
+          <div class="value gold mono">$0.68</div>
+          <div class="sub"><span class="price-badge">&#9660; -12.56%</span></div>
+        </div>
+        <div class="hero-stat">
+          <div class="label">Market Cap</div>
+          <div class="value mono">CA$206M</div>
+          <div class="sub muted">189.4M shares × ~CA$1.10</div>
+        </div>
+        <div class="hero-stat">
+          <div class="label">52-Week Range</div>
+          <div class="value mono" style="font-size:17px;">$0.30 — $0.90</div>
+          <div class="sub muted">USD</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 2. STOCK PRICE CHART ===== -->
+<section id="price-chart">
+  <div class="container">
+    <h2 class="section-title"><span class="dot"></span>Stock Price — 1 Year (DNRSF, USD)</h2>
+    <p class="section-subtitle">Daily close. As of March 13, 2026.</p>
+    <div class="card">
+      <div class="chart-container">
+        <canvas id="priceChart"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3. CAPITAL STRUCTURE ===== -->
+<section id="capital">
+  <div class="container">
+    <h2 class="section-title"><span class="dot"></span>Capital Structure</h2>
+    <div class="card" style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Security</th>
+            <th class="num">Count / Amount</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Common Shares</td>
+            <td class="num mono">189,356,286</td>
+            <td class="muted">As of March 6, 2026</td>
+          </tr>
+          <tr>
+            <td>Stock Options</td>
+            <td class="num mono">14,432,500</td>
+            <td class="muted">CA$0.52–CA$6.50, expiry 2026–2031</td>
+          </tr>
+          <tr>
+            <td>Warrants</td>
+            <td class="num mono">~33,682,533</td>
+            <td class="muted">Total issuable, various prices CA$0.60–$8.00</td>
+          </tr>
+          <tr>
+            <td>Convertible Debentures</td>
+            <td class="num mono">CA$34.2M face</td>
+            <td class="muted">67,979,545 shares issuable</td>
+          </tr>
+          <tr class="highlight-row">
+            <td><strong>Fully Diluted (in-the-money)</strong></td>
+            <td class="num mono"><strong>335,902,704</strong></td>
+            <td></td>
+          </tr>
+          <tr class="highlight-row">
+            <td><strong>Fully Diluted (total)</strong></td>
+            <td class="num mono"><strong>344,738,074</strong></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="warrant-highlight">
+        <span class="wh-icon green">&#10003;</span>
+        <span><strong class="green">CA$16.7M</strong> received from warrant exercises in early 2026 — strengthening the balance sheet.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4. PROJECT PORTFOLIO ===== -->
+<section id="projects">
+  <div class="container">
+    <h2 class="section-title"><span class="dot"></span>Project Portfolio</h2>
+    <div class="project-grid">
+
+      <!-- Zancudo -->
+      <div class="project-card">
+        <div class="project-card-header">
+          <h3 class="gold">Zancudo</h3>
+          <span class="project-tag tag-gold">100% Owned</span>
+        </div>
+        <div class="project-meta">
+          <span><strong>Location:</strong> Colombia</span>
+          <span><strong>Type:</strong> High-grade Au-Ag underground</span>
+          <span><strong>Status:</strong> Early production (since Q2 2025), commercial concentrate by Q3 2026</span>
+          <span><strong>Offtake:</strong> Long-term agreement with Trafigura</span>
+        </div>
+        <div class="project-resources">
+          <div class="resource-box">
+            <div class="res-label">Indicated</div>
+            <div class="res-value gold">217 koz Au</div>
+            <div class="res-label" style="margin-top:2px;">979kt @ 6.9 g/t Au, 84 g/t Ag</div>
+          </div>
+          <div class="resource-box">
+            <div class="res-label">Inferred</div>
+            <div class="res-value gold">832 koz Au</div>
+            <div class="res-label" style="margin-top:2px;">4.6 Mt @ 5.6 g/t Au, 84 g/t Ag</div>
+          </div>
+        </div>
+        <ul class="project-details">
+          <li>Total: ~1,049 koz Au-eq (at ~85:1 Au:Ag)</li>
+          <li>2.7 Moz Ag (Indicated) + 12.5 Moz Ag (Inferred)</li>
+          <li>Processing: 1,000 tpd plant under construction</li>
+          <li>Shipping: ~581 t/month to Trafigura @ ~10 g/t Au, 200 g/t Ag</li>
+        </ul>
+      </div>
+
+      <!-- Aguablanca -->
+      <div class="project-card">
+        <div class="project-card-header">
+          <h3 class="teal">Aguablanca</h3>
+          <span class="project-tag tag-teal">22.1% via RNR</span>
+        </div>
+        <div class="project-meta">
+          <span><strong>Location:</strong> Spain (EU Strategic Project)</span>
+          <span><strong>Type:</strong> Ni-Cu underground</span>
+          <span><strong>Status:</strong> Restart Q2 2026, production by Q4 2026</span>
+          <span><strong>Offtake:</strong> 100% to Boliden (Finland smelter)</span>
+        </div>
+        <div class="project-resources">
+          <div class="resource-box">
+            <div class="res-label">Reserves (P&P)</div>
+            <div class="res-value teal">69.6 Mlb Ni</div>
+            <div class="res-label" style="margin-top:2px;">4.71 Mt @ 0.67% Ni, 0.59% Cu</div>
+          </div>
+          <div class="resource-box">
+            <div class="res-label">M&I Resources</div>
+            <div class="res-value teal">76.8 Mlb Ni</div>
+            <div class="res-label" style="margin-top:2px;">5.3 Mt @ 0.65% Ni, 0.58% Cu</div>
+          </div>
+        </div>
+        <ul class="project-details">
+          <li>61.7 Mlb Cu (Reserves), 68.0 Mlb Cu (M&I)</li>
+          <li>Mine Life: 6 years at 2,403 tpd</li>
+          <li>AISC: US$4.04/lb Ni (by-product)</li>
+          <li>PFS NPV₅%: US$83.1M (100%), IRR 213%</li>
+          <li>Capex: US$30.1M restart</li>
+          <li>LOM Revenue: US$480.3M, After-tax CF: US$105.7M</li>
+          <li>Financing: US$20M notes at 12% by RNR</li>
+        </ul>
+      </div>
+
+      <!-- Lomero -->
+      <div class="project-card">
+        <div class="project-card-header">
+          <h3 class="orange">Lomero</h3>
+          <span class="project-tag tag-orange">100% Owned</span>
+        </div>
+        <div class="project-meta">
+          <span><strong>Location:</strong> Spain, Iberian Pyrite Belt</span>
+          <span><strong>Type:</strong> Polymetallic VMS (Cu-Zn-Pb-Au-Ag)</span>
+          <span><strong>Status:</strong> Exploration / Development</span>
+          <span><strong>Synergy:</strong> Can use Aguablanca 5,000 tpd plant</span>
+        </div>
+        <div class="project-resources">
+          <div class="resource-box">
+            <div class="res-label">Indicated</div>
+            <div class="res-value orange">7.73 Mt</div>
+            <div class="res-label" style="margin-top:2px;">1.91% CuEq</div>
+          </div>
+          <div class="resource-box">
+            <div class="res-label">Inferred</div>
+            <div class="res-value orange">3.45 Mt</div>
+            <div class="res-label" style="margin-top:2px;">1.46% CuEq</div>
+          </div>
+        </div>
+        <ul class="project-details">
+          <li>Cu: 51 kt (Ind) + 9.9 kt (Inf)</li>
+          <li>Zn: 80 kt (Ind) + 40.7 kt (Inf)</li>
+          <li>Pb: 36 kt (Ind) + 18.4 kt (Inf)</li>
+          <li>Ag: 6.1 Moz (Ind) + 2.5 Moz (Inf)</li>
+          <li>Au: 0.6 Moz (Ind) + 0.2 Moz (Inf)</li>
+          <li>Open pit + underground potential</li>
+        </ul>
+      </div>
+
+      <!-- Toral -->
+      <div class="project-card">
+        <div class="project-card-header">
+          <h3 style="color:var(--purple);">Toral</h3>
+          <span class="project-tag" style="background:rgba(155,123,204,0.15);color:var(--purple);">100% Option</span>
+        </div>
+        <div class="project-meta">
+          <span><strong>Location:</strong> Spain</span>
+          <span><strong>Type:</strong> Zn-Pb-Ag (MVT deposit)</span>
+          <span><strong>Status:</strong> Exploration</span>
+        </div>
+        <div class="project-resources">
+          <div class="resource-box">
+            <div class="res-label">Indicated</div>
+            <div class="res-value" style="color:var(--purple);">7 Mt @ 8.9% ZnEq</div>
+            <div class="res-label" style="margin-top:2px;">349 kt Zn, 260 kt Pb, 6.6 Moz Ag</div>
+          </div>
+          <div class="resource-box">
+            <div class="res-label">Inferred</div>
+            <div class="res-value" style="color:var(--purple);">13 Mt @ 6.5% ZnEq</div>
+            <div class="res-label" style="margin-top:2px;">540 kt Zn, 300 kt Pb, 8.0 Moz Ag</div>
+          </div>
+        </div>
+        <ul class="project-details">
+          <li>Met recovery: 77% Zn to concentrate at 59.1% Zn grade</li>
+          <li>Total: 889 kt Zn, 560 kt Pb, 14.6 Moz Ag</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5. NAV MODEL ===== -->
+<section id="nav-model">
+  <div class="container">
+    <h2 class="section-title"><span class="dot"></span>Net Asset Value (NAV) Model — Interactive</h2>
+    <p class="section-subtitle">Adjust commodity prices and discount rate. NAV recalculates in real-time.</p>
+    <div class="nav-model-grid">
+      <!-- Sliders Panel -->
+      <div class="sliders-panel">
+        <h3 style="font-size:14px;font-weight:700;margin-bottom:4px;">Price Deck</h3>
+
+        <div class="slider-group">
+          <label>Gold ($/oz) <span class="slider-val" id="gold-val">$2,500</span></label>
+          <div class="spot-price">Spot: $5,062/oz</div>
+          <input type="range" id="gold-slider" min="1800" max="5500" value="2500" step="50">
+        </div>
+        <div class="slider-group">
+          <label>Silver ($/oz) <span class="slider-val" id="silver-val">$30</span></label>
+          <div class="spot-price">Spot: $81/oz</div>
+          <input type="range" id="silver-slider" min="20" max="100" value="30" step="1">
+        </div>
+        <div class="slider-group teal-slider">
+          <label>Copper ($/lb) <span class="slider-val" id="copper-val">$4.00</span></label>
+          <div class="spot-price">Spot: $5.76/lb</div>
+          <input type="range" id="copper-slider" min="3" max="6" value="4" step="0.05">
+        </div>
+        <div class="slider-group teal-slider">
+          <label>Nickel ($/lb) <span class="slider-val" id="nickel-val">$8.00</span></label>
+          <div class="spot-price">Spot: ~$7.85/lb (from $17,320/t)</div>
+          <input type="range" id="nickel-slider" min="6" max="12" value="8" step="0.1">
+        </div>
+        <div class="slider-group teal-slider">
+          <label>Zinc ($/lb) <span class="slider-val" id="zinc-val">$1.30</span></label>
+          <div class="spot-price">Spot: ~$1.55/lb (from ~$3,412/t)</div>
+          <input type="range" id="zinc-slider" min="0.8" max="2" value="1.3" step="0.05">
+        </div>
+        <div class="slider-group teal-slider">
+          <label>Lead ($/lb) <span class="slider-val" id="lead-val">$0.95</span></label>
+          <div class="spot-price">Spot: ~$0.89/lb</div>
+          <input type="range" id="lead-slider" min="0.6" max="1.5" value="0.95" step="0.05">
+        </div>
+
+        <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:4px;">
+          <div class="slider-group">
+            <label>Discount Rate <span class="slider-val" id="discount-val">8%</span></label>
+            <input type="range" id="discount-slider" min="5" max="15" value="8" step="0.5">
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Panel -->
+      <div class="nav-results-panel">
+        <div class="nav-hero-value">
+          <div class="big-label">NAV Per Share (Fully Diluted)</div>
+          <div class="big-number" id="nav-per-share">$0.00</div>
+          <div class="upside" id="nav-upside"></div>
+          <div class="big-label" style="margin-top:4px;">vs. Current Price: <span class="mono">$0.68</span></div>
+        </div>
+
+        <div class="nav-breakdown-grid" id="nav-breakdown">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:14px;font-weight:700;margin-bottom:14px;">NAV Waterfall</h3>
+          <div class="waterfall-chart-container">
+            <canvas id="waterfallChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 6. DCF MODEL ===== -->
+<section id="dcf-model">
+  <div class="container">
+    <h2 class="section-title"><span class="dot"></span>Discounted Free Cash Flow (DCF) Model</h2>
+    <p class="section-subtitle">10-year projection (2026–2035). FCF scales with commodity prices above. Adjust terminal growth rate below.</p>
+
+    <div class="dcf-controls">
+      <div class="slider-group" style="max-width:300px;">
+        <label>Terminal Growth Rate <span class="slider-val" id="tgr-val">2.0%</span></label>
+        <input type="range" id="tgr-slider" min="0" max="5" value="2" step="0.25">
+      </div>
+    </div>
+
+    <div class="dcf-results" id="dcf-results">
+      <!-- Populated by JS -->
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+      <h3 style="font-size:14px;font-weight:700;margin-bottom:14px;">Year-by-Year FCF Projection ($M)</h3>
+      <div class="dcf-table-wrap">
+        <table class="data-table" id="dcf-table">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th class="num">Zancudo</th>
+              <th class="num">Aguablanca</th>
+              <th class="num">Lomero</th>
+              <th class="num">Toral</th>
+              <th class="num">Total FCF</th>
+              <th class="num">Discount Factor</th>
+              <th class="num">PV of FCF</th>
+            </tr>
+          </thead>
+          <tbody id="dcf-tbody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+      <h3 style="font-size:14px;font-weight:700;margin-bottom:14px;">Cumulative Discounted FCF</h3>
+      <div class="chart-container" style="height:280px;">
+        <canvas id="dcfChart"></canvas>
+      </div>
+    </div>
+
+    <div class="method-comparison" id="method-comparison">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7. SENSITIVITY ===== -->
+<section id="sensitivity">
+  <div class="container">
+    <h2 class="section-title"><span class="dot"></span>Sensitivity Analysis — NAV/Share</h2>
+    <p class="section-subtitle">Gold price (rows) vs. Discount rate (columns). Green cells above current price ($0.68), red cells below.</p>
+    <div class="card">
+      <div class="sensitivity-wrap">
+        <table class="sensitivity-table" id="sensitivity-table">
+          <!-- Populated by JS -->
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 8. RISK ASSESSMENT ===== -->
+<section id="risks">
+  <div class="container">
+    <h2 class="section-title"><span class="dot"></span>Risk Assessment</h2>
+    <div class="risk-grid">
+      <div class="risk-card">
+        <span class="risk-severity risk-high">HIGH</span>
+        <div class="risk-text"><strong>Pre-revenue / Cash Burn</strong> — Company is pre-commercial production. Significant ongoing capex for Zancudo plant construction while revenue remains limited to bulk concentrate shipments.</div>
+      </div>
+      <div class="risk-card">
+        <span class="risk-severity risk-high">HIGH</span>
+        <div class="risk-text"><strong>Dilution Risk</strong> — Fully diluted share count (344.7M) is 82% higher than basic (189.4M). Convertible debentures alone could add 68M shares.</div>
+      </div>
+      <div class="risk-card">
+        <span class="risk-severity risk-high">HIGH</span>
+        <div class="risk-text"><strong>Execution Risk</strong> — Zancudo ramp-up to 1,000 tpd and Aguablanca restart on schedule are critical. Delays could significantly impact valuation.</div>
+      </div>
+      <div class="risk-card">
+        <span class="risk-severity risk-medium">MEDIUM</span>
+        <div class="risk-text"><strong>Commodity Price Volatility</strong> — Revenue is highly sensitive to gold, nickel, copper, and zinc prices. Multi-metal exposure provides some diversification.</div>
+      </div>
+      <div class="risk-card">
+        <span class="risk-severity risk-medium">MEDIUM</span>
+        <div class="risk-text"><strong>Jurisdiction Risk</strong> — Operations in Colombia (security, permitting) and Spain (regulatory). Different risk profiles for each geography.</div>
+      </div>
+      <div class="risk-card">
+        <span class="risk-severity risk-low">LOW</span>
+        <div class="risk-text"><strong>EU Strategic Project</strong> — Aguablanca's designation as EU Strategic Project provides regulatory support and potential access to EU critical minerals funding.</div>
+      </div>
+      <div class="risk-card">
+        <span class="risk-severity risk-positive">POSITIVE</span>
+        <div class="risk-text"><strong>Multiple Project Optionality</strong> — Four distinct projects across two jurisdictions provide diversification. Warrant exercises (CA$16.7M in early 2026) are strengthening the balance sheet.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 9. COMPARABLE COMPANIES ===== -->
+<section id="comps">
+  <div class="container">
+    <h2 class="section-title"><span class="dot"></span>Comparable Companies</h2>
+    <div class="card comps-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Ticker</th>
+            <th class="num">Market Cap</th>
+            <th>Primary Metal</th>
+            <th>Stage</th>
+            <th>EV/Resource</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong class="gold">Denarius Metals</strong></td>
+            <td class="mono">DMET.NE</td>
+            <td class="num mono">CA$206M</td>
+            <td>Au, Ni, Cu, Zn</td>
+            <td>Dev / Early Prod</td>
+            <td class="num mono">Varies</td>
+          </tr>
+          <tr>
+            <td>Lundin Mining</td>
+            <td class="mono">LUN.TO</td>
+            <td class="num mono">~CA$12B</td>
+            <td>Cu, Zn, Ni</td>
+            <td>Producer</td>
+            <td class="num mono">Benchmark</td>
+          </tr>
+          <tr>
+            <td>SolGold</td>
+            <td class="mono">SOLG.L</td>
+            <td class="num mono">~$400M</td>
+            <td>Cu-Au</td>
+            <td>Development</td>
+            <td class="num mono">~$0.03/lb CuEq</td>
+          </tr>
+          <tr>
+            <td>Europa Metals</td>
+            <td class="mono">EUZ.L</td>
+            <td class="num mono">~£5M</td>
+            <td>Zn-Pb-Ag</td>
+            <td>Exploration</td>
+            <td class="num mono">Low</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10. INVESTMENT THESIS ===== -->
+<section id="thesis">
+  <div class="container">
+    <h2 class="section-title"><span class="dot"></span>Investment Thesis Summary</h2>
+    <div class="thesis-grid">
+      <div class="thesis-card thesis-bull">
+        <h3>&#9650; Bull Case</h3>
+        <ul>
+          <li>Gold sustains above $3,000/oz; base metals remain strong</li>
+          <li>All four projects execute on timeline</li>
+          <li>Zancudo achieves commercial production at 1,000 tpd by Q3 2026</li>
+          <li>Aguablanca restarts on schedule with Boliden offtake</li>
+          <li>Lomero and Toral optionality fully recognized</li>
+        </ul>
+        <div class="thesis-val green" id="thesis-bull">—</div>
+        <div class="muted" style="font-size:11px;">NAV/share at current spot prices</div>
+      </div>
+      <div class="thesis-card thesis-base">
+        <h3>&#9644; Base Case</h3>
+        <ul>
+          <li>Moderate commodity prices (default price deck)</li>
+          <li>Zancudo + Aguablanca deliver as planned</li>
+          <li>Lomero/Toral valued as exploration-stage optionality</li>
+          <li>Some additional dilution from convertible debentures</li>
+        </ul>
+        <div class="thesis-val gold" id="thesis-base">—</div>
+        <div class="muted" style="font-size:11px;">NAV/share at base prices</div>
+      </div>
+      <div class="thesis-card thesis-bear">
+        <h3>&#9660; Bear Case</h3>
+        <ul>
+          <li>Commodity downturn (gold &lt;$2,000, weak base metals)</li>
+          <li>Execution delays at Zancudo and Aguablanca</li>
+          <li>Full dilution to 344.7M shares</li>
+          <li>Lomero/Toral contribute minimal value</li>
+        </ul>
+        <div class="thesis-val red" id="thesis-bear">—</div>
+        <div class="muted" style="font-size:11px;">NAV/share at bear prices, 12% discount</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 11. FOOTER ===== -->
+<footer class="site-footer">
+  <div class="container">
+    <p><a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a></p>
+    <p>Data as of March 15, 2026. Prices as of March 13, 2026.</p>
+    <p class="disclaimer">This analysis is for informational purposes only and does not constitute investment advice. All projections are estimates based on public information and analyst assumptions. Mining investments carry significant risk including potential total loss of capital.</p>
+  </div>
+</footer>
+
+<script>
+// ===================================================================
+// DENARIUS METALS INVESTMENT DASHBOARD — All logic in one script
+// ===================================================================
+
+// ----- THEME TOGGLE -----
+function toggleTheme() {
+  document.body.classList.toggle('light-mode');
+  const btn = document.querySelector('.theme-toggle');
+  btn.textContent = document.body.classList.contains('light-mode') ? 'Dark' : 'Light';
+  // Re-render charts with updated colors
+  updateAll();
+}
+
+// ----- UTILITY -----
+function fmt(n, decimals=2) {
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  const abs = Math.abs(n);
+  const sign = n < 0 ? '-' : '';
+  return sign + abs.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+}
+function fmtM(n) {
+  if (Math.abs(n) >= 1000) return '$' + fmt(n/1000,1) + 'B';
+  return '$' + fmt(n,0) + 'M';
+}
+function fmtPrice(n,d=2) { return '$' + fmt(n,d); }
+
+function getCSS(prop) {
+  return getComputedStyle(document.body).getPropertyValue(prop).trim();
+}
+
+// ----- SLIDER SETUP -----
+const sliders = {
+  gold: { el: 'gold-slider', valEl: 'gold-val', fmt: v => '$' + Number(v).toLocaleString(), base: 2500 },
+  silver: { el: 'silver-slider', valEl: 'silver-val', fmt: v => '$' + Number(v).toLocaleString(), base: 30 },
+  copper: { el: 'copper-slider', valEl: 'copper-val', fmt: v => '$' + parseFloat(v).toFixed(2), base: 4 },
+  nickel: { el: 'nickel-slider', valEl: 'nickel-val', fmt: v => '$' + parseFloat(v).toFixed(2), base: 8 },
+  zinc: { el: 'zinc-slider', valEl: 'zinc-val', fmt: v => '$' + parseFloat(v).toFixed(2), base: 1.3 },
+  lead: { el: 'lead-slider', valEl: 'lead-val', fmt: v => '$' + parseFloat(v).toFixed(2), base: 0.95 },
+  discount: { el: 'discount-slider', valEl: 'discount-val', fmt: v => parseFloat(v).toFixed(1) + '%', base: 8 },
+};
+const tgrSlider = document.getElementById('tgr-slider');
+const tgrVal = document.getElementById('tgr-val');
+
+function getVal(key) { return parseFloat(document.getElementById(sliders[key].el).value); }
+
+Object.keys(sliders).forEach(key => {
+  const s = sliders[key];
+  const el = document.getElementById(s.el);
+  const valEl = document.getElementById(s.valEl);
+  valEl.textContent = s.fmt(el.value);
+  el.addEventListener('input', () => {
+    valEl.textContent = s.fmt(el.value);
+    updateAll();
+  });
+});
+tgrSlider.addEventListener('input', () => {
+  tgrVal.textContent = parseFloat(tgrSlider.value).toFixed(1) + '%';
+  updateAll();
+});
+
+// ----- PRICE CHART -----
+const priceData = [
+  {d:'2025-03-17',v:0.42},{d:'2025-04-01',v:0.44},{d:'2025-05-01',v:0.50},{d:'2025-06-02',v:0.48},
+  {d:'2025-07-01',v:0.45},{d:'2025-08-01',v:0.40},{d:'2025-09-02',v:0.35},{d:'2025-09-15',v:0.46},
+  {d:'2025-10-01',v:0.50},{d:'2025-10-31',v:0.52},{d:'2025-11-03',v:0.55},{d:'2025-12-01',v:0.48},
+  {d:'2026-01-05',v:0.55},{d:'2026-01-20',v:0.60},{d:'2026-02-02',v:0.70},{d:'2026-02-13',v:0.80},
+  {d:'2026-02-20',v:0.90},{d:'2026-03-01',v:0.85},{d:'2026-03-06',v:0.78},{d:'2026-03-11',v:0.79},
+  {d:'2026-03-12',v:0.78},{d:'2026-03-13',v:0.68}
+];
+
+let priceChart;
+function renderPriceChart() {
+  const ctx = document.getElementById('priceChart').getContext('2d');
+  const isLight = document.body.classList.contains('light-mode');
+  const gridColor = isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)';
+  const textColor = isLight ? '#6B7280' : '#6B7280';
+  const goldColor = '#D4A843';
+
+  if (priceChart) priceChart.destroy();
+
+  const gradient = ctx.createLinearGradient(0, 0, 0, 360);
+  gradient.addColorStop(0, 'rgba(212,168,67,0.35)');
+  gradient.addColorStop(0.6, 'rgba(212,168,67,0.08)');
+  gradient.addColorStop(1, 'rgba(212,168,67,0.0)');
+
+  priceChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: priceData.map(p => {
+        const d = new Date(p.d);
+        return d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+      }),
+      datasets: [{
+        label: 'DNRSF (USD)',
+        data: priceData.map(p => p.v),
+        borderColor: goldColor,
+        backgroundColor: gradient,
+        borderWidth: 2.5,
+        pointRadius: 0,
+        pointHoverRadius: 6,
+        pointHoverBackgroundColor: goldColor,
+        pointHoverBorderColor: '#fff',
+        pointHoverBorderWidth: 2,
+        fill: true,
+        tension: 0.3,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: isLight ? '#fff' : '#1e2130',
+          titleColor: isLight ? '#1A1D26' : '#E8E6E1',
+          bodyColor: goldColor,
+          borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          padding: 12,
+          bodyFont: { family: "'JetBrains Mono'", weight: '600', size: 14 },
+          titleFont: { family: "'Inter'", size: 12 },
+          callbacks: {
+            label: ctx => '  $' + ctx.parsed.y.toFixed(2)
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: gridColor, drawBorder: false },
+          ticks: { color: textColor, font: { size: 10, family: "'Inter'" }, maxRotation: 45, autoSkip: true, maxTicksLimit: 10 },
+          border: { display: false }
+        },
+        y: {
+          grid: { color: gridColor, drawBorder: false },
+          ticks: {
+            color: textColor,
+            font: { size: 11, family: "'JetBrains Mono'" },
+            callback: v => '$' + v.toFixed(2)
+          },
+          border: { display: false },
+          min: 0.25
+        }
+      }
+    }
+  });
+}
+
+// ----- NAV CALCULATION -----
+const SHARES_ITM = 335902704;
+const SHARES_FULL = 344738074;
+
+function calcNAV() {
+  const Au = getVal('gold'), Ag = getVal('silver'), Cu = getVal('copper');
+  const Ni = getVal('nickel'), Zn = getVal('zinc'), Pb = getVal('lead');
+  const dr = getVal('discount') / 100;
+
+  // 1. Zancudo (100%)
+  const z_au_oz = 1049000, z_ag_oz = 15200000;
+  const z_recovery = 0.75, z_extraction = 0.80;
+  const z_mine_life = 8;
+  const z_capex = 25; // $M
+  const z_opex_annual = 55; // $M/yr
+  const z_total_rev = (z_au_oz * Au + z_ag_oz * Ag) * z_recovery * z_extraction / 1e6;
+  const z_annual_rev = z_total_rev / z_mine_life;
+  const z_annual_fcf = z_annual_rev - z_opex_annual - (z_capex / z_mine_life);
+  let z_npv = 0;
+  for (let t = 1; t <= z_mine_life; t++) {
+    z_npv += z_annual_fcf / Math.pow(1 + dr, t);
+  }
+
+  // 2. Aguablanca (22.1%)
+  const a_nav_base = 83.1; // $M at Ni=7.30, Cu=3.50, DR=5%
+  const a_nav_adjusted = a_nav_base * ((Ni / 7.30) * 0.6 + (Cu / 3.50) * 0.4);
+  // Re-discount from 5% to user rate over 6 years
+  const a_nav_rediscounted = a_nav_adjusted * Math.pow(1.05, 6) / Math.pow(1 + dr, 6);
+  const a_dmet_share = a_nav_rediscounted * 0.221;
+
+  // 3. Lomero (100%)
+  const l_cu_t = 60900, l_zn_t = 120600, l_pb_t = 54500;
+  const l_ag_oz = 8600000, l_au_oz = 800000;
+  const l_rec_metal = 0.85, l_rec_pm = 0.75;
+  const l_mine_life = 10, l_total_t = 11180000;
+  const l_capex = 150, l_opex_per_t = 45;
+  const LB_PER_T = 2204.62;
+  const l_rev = (
+    l_cu_t * Cu * LB_PER_T * l_rec_metal +
+    l_zn_t * Zn * LB_PER_T * l_rec_metal +
+    l_pb_t * Pb * LB_PER_T * l_rec_metal +
+    l_ag_oz * Ag * l_rec_pm +
+    l_au_oz * Au * l_rec_pm
+  ) / 1e6;
+  const l_opex_total = l_total_t * l_opex_per_t / 1e6;
+  const l_annual_fcf = (l_rev / l_mine_life) - (l_opex_total / l_mine_life) - (l_capex / l_mine_life);
+  let l_npv = 0;
+  for (let t = 1; t <= l_mine_life; t++) {
+    l_npv += l_annual_fcf / Math.pow(1 + dr, t);
+  }
+  l_npv *= 0.70; // 30% exploration discount
+
+  // 4. Toral (100%)
+  const t_zn_t = 889000, t_pb_t = 560000, t_ag_oz = 14600000;
+  const t_rec_zn = 0.77, t_rec_pb = 0.84, t_rec_ag = 0.87;
+  const t_mine_life = 12, t_total_t = 20000000;
+  const t_capex = 120, t_opex_per_t = 50;
+  const t_rev = (
+    t_zn_t * Zn * LB_PER_T * t_rec_zn +
+    t_pb_t * Pb * LB_PER_T * t_rec_pb +
+    t_ag_oz * Ag * t_rec_ag
+  ) / 1e6;
+  const t_opex_total = t_total_t * t_opex_per_t / 1e6;
+  const t_annual_fcf = (t_rev / t_mine_life) - (t_opex_total / t_mine_life) - (t_capex / t_mine_life);
+  let t_npv = 0;
+  for (let t = 1; t <= t_mine_life; t++) {
+    t_npv += t_annual_fcf / Math.pow(1 + dr, t);
+  }
+  t_npv *= 0.60; // 40% exploration discount
+
+  // 5. Corporate G&A
+  const ga_pv = -5 / dr;
+
+  // 6. Debt & Cash
+  const debt = -25;
+  const cash = 15;
+
+  const total_nav = z_npv + a_dmet_share + l_npv + t_npv + ga_pv + debt + cash;
+  const nav_per_share = total_nav / SHARES_ITM * 1e6;
+
+  return {
+    zancudo: z_npv,
+    aguablanca: a_dmet_share,
+    lomero: l_npv,
+    toral: t_npv,
+    ga: ga_pv,
+    debt: debt,
+    cash: cash,
+    total: total_nav,
+    perShare: nav_per_share
+  };
+}
+
+// ----- DCF CALCULATION -----
+function calcDCF() {
+  const Au = getVal('gold'), Ni = getVal('nickel'), Cu = getVal('copper'), Zn = getVal('zinc');
+  const dr = getVal('discount') / 100;
+  const tgr = parseFloat(tgrSlider.value) / 100;
+
+  // Base FCFs at default prices
+  const baseFCF = {
+    zancudo:     [5, 25, 30, 30, 28, 25, 20, 15, 10, 5],
+    aguablanca:  [0, 8, 12, 12, 12, 10, 8, 0, 0, 0],
+    lomero:      [0, 0, -15, -10, 15, 20, 22, 22, 20, 18],
+    toral:       [0, 0, 0, -12, -8, 10, 15, 15, 15, 12],
+  };
+
+  // Scale factors
+  const sf = {
+    zancudo: Au / 2500,
+    aguablanca: Ni / 8 * 0.221 / 0.221, // just Ni scaling, 22.1% already in base
+    lomero: Cu / 4,
+    toral: Zn / 1.3,
+  };
+
+  const years = [];
+  let cumPV = 0;
+  for (let i = 0; i < 10; i++) {
+    const yr = 2026 + i;
+    const z = baseFCF.zancudo[i] * sf.zancudo;
+    const a = baseFCF.aguablanca[i] * sf.aguablanca;
+    const l = baseFCF.lomero[i] * (baseFCF.lomero[i] < 0 ? 1 : sf.lomero); // capex doesn't scale
+    const t = baseFCF.toral[i] * (baseFCF.toral[i] < 0 ? 1 : sf.toral);
+    const total = z + a + l + t;
+    const factor = 1 / Math.pow(1 + dr, i + 1);
+    const pv = total * factor;
+    cumPV += pv;
+    years.push({ year: yr, z, a, l, t, total, factor, pv, cumPV });
+  }
+
+  // Terminal value
+  const lastFCF = years[9].total;
+  const tv = lastFCF * (1 + tgr) / (dr - tgr);
+  const tvPV = tv / Math.pow(1 + dr, 10);
+
+  const ev = cumPV + tvPV;
+  const equity = ev - 25 + 15; // -debt +cash
+  const perShare = equity / SHARES_ITM * 1e6;
+
+  return { years, tv, tvPV, ev, equity, perShare, cumPV };
+}
+
+// ----- RENDER NAV -----
+let waterfallChart;
+function renderNAV() {
+  const nav = calcNAV();
+  const isLight = document.body.classList.contains('light-mode');
+
+  document.getElementById('nav-per-share').textContent = fmtPrice(nav.perShare, 2);
+  const upside = ((nav.perShare - 0.68) / 0.68 * 100);
+  const upsideEl = document.getElementById('nav-upside');
+  if (upside >= 0) {
+    upsideEl.textContent = '+' + fmt(upside,1) + '% upside';
+    upsideEl.style.color = 'var(--green)';
+  } else {
+    upsideEl.textContent = fmt(upside,1) + '% downside';
+    upsideEl.style.color = 'var(--red)';
+  }
+
+  const breakdown = [
+    { label: 'Zancudo', value: nav.zancudo, color: 'var(--gold)' },
+    { label: 'Aguablanca', value: nav.aguablanca, color: 'var(--teal)' },
+    { label: 'Lomero', value: nav.lomero, color: 'var(--orange)' },
+    { label: 'Toral', value: nav.toral, color: 'var(--purple)' },
+    { label: 'Corp G&A', value: nav.ga, color: 'var(--red)' },
+    { label: 'Debt', value: nav.debt, color: 'var(--red)' },
+    { label: 'Cash', value: nav.cash, color: 'var(--green)' },
+  ];
+  const bdEl = document.getElementById('nav-breakdown');
+  bdEl.innerHTML = breakdown.map(b => `
+    <div class="nav-breakdown-item">
+      <div class="nav-b-label">${b.label}</div>
+      <div class="nav-b-value" style="color:${b.color}">${fmtM(b.value)}</div>
+    </div>
+  `).join('');
+
+  // Waterfall chart
+  const ctx = document.getElementById('waterfallChart').getContext('2d');
+  const gridColor = isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)';
+  const textColor = isLight ? '#4B5563' : '#6B7280';
+
+  if (waterfallChart) waterfallChart.destroy();
+
+  const labels = breakdown.map(b => b.label).concat(['Total NAV']);
+  const values = breakdown.map(b => b.value).concat([nav.total]);
+  const colors = values.map((v,i) => {
+    if (i === values.length - 1) return '#D4A843';
+    return v >= 0 ? (i <= 3 ? ['#D4A843','#4F98A3','#E89B50','#9B7BCC'][i] : '#4CAF7D') : '#E55B5B';
+  });
+
+  waterfallChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors,
+        borderRadius: 4,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: isLight ? '#fff' : '#1e2130',
+          titleColor: isLight ? '#1A1D26' : '#E8E6E1',
+          bodyColor: isLight ? '#1A1D26' : '#E8E6E1',
+          borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          bodyFont: { family: "'JetBrains Mono'", weight: '600' },
+          callbacks: {
+            label: ctx => ' ' + fmtM(ctx.parsed.y)
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: textColor, font: { size: 10, family: "'Inter'" } },
+          border: { display: false }
+        },
+        y: {
+          grid: { color: gridColor, drawBorder: false },
+          ticks: {
+            color: textColor,
+            font: { size: 10, family: "'JetBrains Mono'" },
+            callback: v => (v >= 1000 || v <= -1000) ? '$' + (v/1000).toFixed(0) + 'B' : '$' + v + 'M'
+          },
+          border: { display: false }
+        }
+      }
+    }
+  });
+}
+
+// ----- RENDER DCF -----
+let dcfChart;
+function renderDCF() {
+  const dcf = calcDCF();
+  const nav = calcNAV();
+  const isLight = document.body.classList.contains('light-mode');
+  const gridColor = isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)';
+  const textColor = isLight ? '#4B5563' : '#6B7280';
+
+  // DCF result cards
+  const resultsEl = document.getElementById('dcf-results');
+  resultsEl.innerHTML = `
+    <div class="dcf-result-card">
+      <div class="dcf-val gold mono">${fmtPrice(dcf.perShare,2)}</div>
+      <div class="dcf-label">DCF Per Share</div>
+    </div>
+    <div class="dcf-result-card">
+      <div class="dcf-val mono">${fmtM(dcf.ev)}</div>
+      <div class="dcf-label">Enterprise Value</div>
+    </div>
+    <div class="dcf-result-card">
+      <div class="dcf-val mono">${fmtM(dcf.equity)}</div>
+      <div class="dcf-label">Equity Value</div>
+    </div>
+    <div class="dcf-result-card">
+      <div class="dcf-val mono">${fmtM(dcf.tvPV)}</div>
+      <div class="dcf-label">Terminal Value (PV)</div>
+    </div>
+  `;
+
+  // DCF table
+  const tbody = document.getElementById('dcf-tbody');
+  tbody.innerHTML = dcf.years.map(y => `
+    <tr>
+      <td class="mono">${y.year}</td>
+      <td class="num mono" style="color:${y.z >= 0 ? 'var(--gold)' : 'var(--red)'}">${fmt(y.z,1)}</td>
+      <td class="num mono" style="color:${y.a >= 0 ? 'var(--teal)' : 'var(--red)'}">${fmt(y.a,1)}</td>
+      <td class="num mono" style="color:${y.l >= 0 ? 'var(--orange)' : 'var(--red)'}">${fmt(y.l,1)}</td>
+      <td class="num mono" style="color:${y.t >= 0 ? 'var(--purple)' : 'var(--red)'}">${fmt(y.t,1)}</td>
+      <td class="num mono" style="font-weight:600">${fmt(y.total,1)}</td>
+      <td class="num mono muted">${fmt(y.factor,4)}</td>
+      <td class="num mono" style="font-weight:600;color:${y.pv >= 0 ? 'var(--green)' : 'var(--red)'}">${fmt(y.pv,1)}</td>
+    </tr>
+  `).join('');
+
+  // DCF cumulative chart
+  const ctx = document.getElementById('dcfChart').getContext('2d');
+  if (dcfChart) dcfChart.destroy();
+
+  const gradient = ctx.createLinearGradient(0, 0, 0, 280);
+  gradient.addColorStop(0, 'rgba(79,152,163,0.3)');
+  gradient.addColorStop(1, 'rgba(79,152,163,0.0)');
+
+  dcfChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dcf.years.map(y => y.year),
+      datasets: [{
+        label: 'Cumulative PV ($M)',
+        data: dcf.years.map(y => y.cumPV),
+        borderColor: '#4F98A3',
+        backgroundColor: gradient,
+        borderWidth: 2.5,
+        pointRadius: 4,
+        pointBackgroundColor: '#4F98A3',
+        pointBorderColor: isLight ? '#fff' : '#1e2130',
+        pointBorderWidth: 2,
+        fill: true,
+        tension: 0.3,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: isLight ? '#fff' : '#1e2130',
+          titleColor: isLight ? '#1A1D26' : '#E8E6E1',
+          bodyColor: '#4F98A3',
+          borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          bodyFont: { family: "'JetBrains Mono'", weight: '600' },
+          callbacks: { label: ctx => ' $' + fmt(ctx.parsed.y,1) + 'M' }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: gridColor, drawBorder: false },
+          ticks: { color: textColor, font: { size: 11, family: "'JetBrains Mono'" } },
+          border: { display: false }
+        },
+        y: {
+          grid: { color: gridColor, drawBorder: false },
+          ticks: {
+            color: textColor,
+            font: { size: 11, family: "'JetBrains Mono'" },
+            callback: v => '$' + v + 'M'
+          },
+          border: { display: false }
+        }
+      }
+    }
+  });
+
+  // Method comparison
+  const mcEl = document.getElementById('method-comparison');
+  const navUpside = ((nav.perShare - 0.68) / 0.68 * 100);
+  const dcfUpside = ((dcf.perShare - 0.68) / 0.68 * 100);
+  const avg = (nav.perShare + dcf.perShare) / 2;
+  const avgUpside = ((avg - 0.68) / 0.68 * 100);
+  mcEl.innerHTML = `
+    <div class="method-card">
+      <div class="method-name">Current Price</div>
+      <div class="method-val mono">$0.68</div>
+    </div>
+    <div class="method-card">
+      <div class="method-name">NAV / Share</div>
+      <div class="method-val mono gold">${fmtPrice(nav.perShare,2)}</div>
+      <div class="muted" style="font-size:11px;margin-top:4px;">${navUpside >= 0 ? '+' : ''}${fmt(navUpside,1)}%</div>
+    </div>
+    <div class="method-card">
+      <div class="method-name">DCF / Share</div>
+      <div class="method-val mono teal">${fmtPrice(dcf.perShare,2)}</div>
+      <div class="muted" style="font-size:11px;margin-top:4px;">${dcfUpside >= 0 ? '+' : ''}${fmt(dcfUpside,1)}%</div>
+    </div>
+    <div class="method-card">
+      <div class="method-name">Blended Average</div>
+      <div class="method-val mono green">${fmtPrice(avg,2)}</div>
+      <div class="muted" style="font-size:11px;margin-top:4px;">${avgUpside >= 0 ? '+' : ''}${fmt(avgUpside,1)}%</div>
+    </div>
+  `;
+}
+
+// ----- SENSITIVITY TABLE -----
+function renderSensitivity() {
+  const goldPrices = [1800, 2000, 2500, 3000, 3500, 4000, 4500, 5000];
+  const discountRates = [5, 7, 9, 11, 13, 15];
+
+  // Save current slider values
+  const origGold = document.getElementById('gold-slider').value;
+  const origDR = document.getElementById('discount-slider').value;
+
+  let html = '<thead><tr><th class="corner">Gold ↓ / DR →</th>';
+  discountRates.forEach(dr => { html += `<th>${dr}%</th>`; });
+  html += '</tr></thead><tbody>';
+
+  goldPrices.forEach(gp => {
+    html += `<tr><th style="text-align:left;">$${gp.toLocaleString()}/oz</th>`;
+    discountRates.forEach(dr => {
+      // Temporarily set values
+      document.getElementById('gold-slider').value = gp;
+      document.getElementById('discount-slider').value = dr;
+      const nav = calcNAV();
+      const val = nav.perShare;
+      const isAbove = val >= 0.68;
+      const intensity = Math.min(Math.abs(val - 0.68) / 2, 1);
+      let bg;
+      if (isAbove) {
+        bg = `rgba(76,175,125,${0.1 + intensity * 0.4})`;
+      } else {
+        bg = `rgba(229,91,91,${0.1 + intensity * 0.4})`;
+      }
+      html += `<td style="background:${bg};font-weight:600;">$${fmt(val,2)}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+
+  document.getElementById('sensitivity-table').innerHTML = html;
+
+  // Restore
+  document.getElementById('gold-slider').value = origGold;
+  document.getElementById('discount-slider').value = origDR;
+}
+
+// ----- THESIS VALUES -----
+function renderThesis() {
+  // Bull: spot prices
+  const origGold = document.getElementById('gold-slider').value;
+  const origSilver = document.getElementById('silver-slider').value;
+  const origCopper = document.getElementById('copper-slider').value;
+  const origNickel = document.getElementById('nickel-slider').value;
+  const origZinc = document.getElementById('zinc-slider').value;
+  const origLead = document.getElementById('lead-slider').value;
+  const origDR = document.getElementById('discount-slider').value;
+
+  // Bull: spot prices, 5% DR
+  document.getElementById('gold-slider').value = 5062;
+  document.getElementById('silver-slider').value = 81;
+  document.getElementById('copper-slider').value = 5.76;
+  document.getElementById('nickel-slider').value = 7.85;
+  document.getElementById('zinc-slider').value = 1.55;
+  document.getElementById('lead-slider').value = 0.89;
+  document.getElementById('discount-slider').value = 5;
+  const bull = calcNAV();
+  document.getElementById('thesis-bull').textContent = fmtPrice(bull.perShare, 2) + '/share';
+
+  // Base: default prices
+  document.getElementById('gold-slider').value = 2500;
+  document.getElementById('silver-slider').value = 30;
+  document.getElementById('copper-slider').value = 4;
+  document.getElementById('nickel-slider').value = 8;
+  document.getElementById('zinc-slider').value = 1.3;
+  document.getElementById('lead-slider').value = 0.95;
+  document.getElementById('discount-slider').value = 8;
+  const base = calcNAV();
+  document.getElementById('thesis-base').textContent = fmtPrice(base.perShare, 2) + '/share';
+
+  // Bear: low prices, 12% DR
+  document.getElementById('gold-slider').value = 1800;
+  document.getElementById('silver-slider').value = 20;
+  document.getElementById('copper-slider').value = 3;
+  document.getElementById('nickel-slider').value = 6;
+  document.getElementById('zinc-slider').value = 0.8;
+  document.getElementById('lead-slider').value = 0.6;
+  document.getElementById('discount-slider').value = 12;
+  const bear = calcNAV();
+  document.getElementById('thesis-bear').textContent = fmtPrice(bear.perShare, 2) + '/share';
+
+  // Restore
+  document.getElementById('gold-slider').value = origGold;
+  document.getElementById('silver-slider').value = origSilver;
+  document.getElementById('copper-slider').value = origCopper;
+  document.getElementById('nickel-slider').value = origNickel;
+  document.getElementById('zinc-slider').value = origZinc;
+  document.getElementById('lead-slider').value = origLead;
+  document.getElementById('discount-slider').value = origDR;
+}
+
+// ----- MASTER UPDATE -----
+function updateAll() {
+  renderNAV();
+  renderDCF();
+  renderSensitivity();
+  renderThesis();
+}
+
+// ----- INIT -----
+window.addEventListener('DOMContentLoaded', () => {
+  renderPriceChart();
+  updateAll();
+});
+
+// Re-render price chart on resize for gradient
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { renderPriceChart(); }, 250);
+});
+</script>
+
+</body>
+</html>
